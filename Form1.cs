@@ -121,7 +121,7 @@ namespace proyectoFinalPrn115
                     }
 
                     Application.Exit();     // Cierra la app
-                    Environment.Exit(0);    // MATA EL PROCESO
+                    Environment.Exit(0);    // CIERRRA EL PROCESO
                 }
                 else
                 {
