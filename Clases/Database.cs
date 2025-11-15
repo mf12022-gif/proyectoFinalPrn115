@@ -20,14 +20,19 @@ namespace proyectoFinalPrn115.Clases
         private static string usuario = "root";
         private static string password = "root";
 
-        // CADENA DE CONEXIÓN
-        private static string cadenaConexion =
-            $"Server={servidor};Database={bd};Uid={usuario};Pwd={password};";
+        
 
         // MÉTODO: Devuelve conexión
         public static MySqlConnection GetConnection()
         {
+            // CADENA DE CONEXIÓN
+            string cadenaConexion =
+               $"Server={servidor};Database={bd};Uid={usuario};Pwd={password};";
             return new MySqlConnection(cadenaConexion);
+        }
+        public static void CerrarConexion(MySqlConnection conexionBD)
+        {
+            conexionBD.Close();
         }
     }
 }
