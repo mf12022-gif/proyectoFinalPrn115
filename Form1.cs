@@ -19,7 +19,7 @@ namespace proyectoFinalPrn115
             InitializeComponent();
             txtUsuario.Focus();
 
-            // Configura botón
+            // Configuracion botón de probar conexion
             btnProbarConexion.Text = "Probar Conexión";
             btnProbarConexion.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
             btnProbarConexion.ForeColor = System.Drawing.Color.White;
@@ -92,34 +92,45 @@ namespace proyectoFinalPrn115
             }
         }
 
-        private void FormLogin_Load(object sender, FormClosingEventArgs e)
+        private void FormLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var result = MessageBox.Show(
-         "¿Estás seguro de salir del sistema?",
-         "Confirmar salida",
-         MessageBoxButtons.YesNo,
-         MessageBoxIcon.Question
-     );
-
-            if (result == DialogResult.Yes)
+            // Solo mostrar si el usuario hace clic en la X
+            if (e.CloseReason == CloseReason.UserClosing)
             {
-                // Cierra conexión
-                Database.CerrarConexionGlobal();
+                var result = MessageBox.Show(
+                    "¿Estás seguro de salir del sistema?",
+                    "Confirmar salida",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2
+                );
 
-                // Cierra todos los formularios abiertos
-                foreach (Form form in Application.OpenForms.Cast<Form>().ToList())
+                if (result == DialogResult.Yes)
                 {
-                    if (form != this)
-                        form.Close();
-                }
+                    // === SALIR: CIERRE TOTAL ===
+                    Database.CerrarConexionGlobal();
 
-                // Fuerza salida
-                Application.Exit();
-                Environment.Exit(0);
+                    // Cierra otros formularios sin disparar eventos
+                    foreach (Form form in Application.OpenForms.Cast<Form>().ToList())
+                    {
+                        if (form != this)
+                        {
+                            form.FormClosing -= FormLogin_FormClosing;
+                            form.Close();
+                        }
+                    }
+
+                    Application.Exit();     // Cierra la app
+                    Environment.Exit(0);    // MATA EL PROCESO
+                }
+                else
+                {
+                    e.Cancel = true; // NO salir
+                }
             }
             else
             {
-                e.Cancel = true; // Cancela el cierre
+                e.Cancel = false; // Cierre forzado (Application.Exit)
             }
         }
     }

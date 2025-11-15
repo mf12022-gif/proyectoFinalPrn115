@@ -55,33 +55,14 @@ namespace proyectoFinalPrn115.Clases
             }
         }
 
-        // MÉTODO: Abre conexión global (opcional)
-        public static bool AbrirConexionGlobal()
-        {
-            try
-            {
-                if (conexionGlobal == null || conexionGlobal.State != System.Data.ConnectionState.Open)
-                {
-                    conexionGlobal = new MySqlConnection(cadenaConexion);
-                    conexionGlobal.Open();
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         // MÉTODO: Cierra conexión global al salir
         public static void CerrarConexionGlobal()
         {
-            if (conexionGlobal != null)
+            if (conexionGlobal != null && conexionGlobal.State == System.Data.ConnectionState.Open)
             {
                 try
                 {
-                    if (conexionGlobal.State == System.Data.ConnectionState.Open)
-                        conexionGlobal.Close();
+                    conexionGlobal.Close();
                     conexionGlobal.Dispose();
                 }
                 catch { }

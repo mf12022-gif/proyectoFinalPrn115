@@ -18,18 +18,8 @@ namespace proyectoFinalPrn115
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            try
-            {
-                // Inicia el formulario principal
-                Application.Run(new FormLogin());
-            }
-            finally
-            {
-                // CIERRE TOTAL OBLIGATORIO
-                Database.CerrarConexionGlobal();
-                Application.Exit();           // Cierra todos los forms
-                Environment.Exit(0);          // MATA EL PROCESO
-            }
+            // Deja que frmLogin controle el cierre
+            Application.Run(new FormLogin());
         }
     }
 }

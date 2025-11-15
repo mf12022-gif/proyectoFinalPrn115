@@ -91,12 +91,17 @@ namespace proyectoFinalPrn115
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Cerrar sesión?", "Confirmar",
-         MessageBoxButtons.YesNo) == DialogResult.Yes)
+            var result = MessageBox.Show(
+         "¿Estás seguro de cerrar sesión y salir del sistema?",
+         "Confirmar salida",
+         MessageBoxButtons.YesNo,
+         MessageBoxIcon.Question
+     );
+
+            if (result == DialogResult.Yes)
             {
                 Database.CerrarConexionGlobal();
-                this.Hide();
-                new FormLogin().Show();
+                Application.Exit();
             }
         }
     }
