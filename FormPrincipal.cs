@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using proyectoFinalPrn115.Clases;
 
 namespace proyectoFinalPrn115
 {
@@ -90,18 +91,12 @@ namespace proyectoFinalPrn115
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            // Pregunta de confirmación para evitar cierre accidental
-            DialogResult resultado = MessageBox.Show(
-                "¿Está seguro de que desea cerrar sesión?",
-                "Confirmar salida",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (resultado == DialogResult.Yes)
+            if (MessageBox.Show("¿Cerrar sesión?", "Confirmar",
+         MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                this.Close(); // Cierra el formulario principal
-                // El evento FormClosed del login se encargará de mostrarlo nuevamente
+                Database.CerrarConexionGlobal();
+                this.Hide();
+                new FormLogin().Show();
             }
         }
     }

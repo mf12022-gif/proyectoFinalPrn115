@@ -26,6 +26,7 @@ namespace proyectoFinalPrn115
 
         {
             InitializeComponent();
+
             // Configura DataGridView
             ConfigurarDataGridView();
 

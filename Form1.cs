@@ -17,48 +17,20 @@ namespace proyectoFinalPrn115
         public FormLogin()
         {
             InitializeComponent();
-            ProbarConexionAlInicio(); // Prueba automática
+            txtUsuario.Focus();
+
+            // Configura botón
+            btnProbarConexion.Text = "Probar Conexión";
+            btnProbarConexion.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
+            btnProbarConexion.ForeColor = System.Drawing.Color.White;
+            btnProbarConexion.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            btnProbarConexion.FlatStyle = FlatStyle.Flat;
+            btnProbarConexion.FlatAppearance.BorderSize = 0;
+
+            // Etiqueta de estado
+            lblEstadoConexion.Text = "Sin probar";
+            lblEstadoConexion.ForeColor = System.Drawing.Color.Gray;
         }
-
-
-        // PRUEBA CONEXIÓN (AL INICIO Y AL CLIC)
-        private void ProbarConexionAlInicio()
-        {
-            ProbarConexion();
-        }
-
-        private void ProbarConexion()
-        {
-            using (MySqlConnection conn = Database.GetConnection())
-            {
-                try
-                {
-                    conn.Open();
-                    lblEstadoConexion.Text = "Conectado a igucosadb";
-                    lblEstadoConexion.ForeColor = System.Drawing.Color.Green;
-                    MessageBox.Show("Conexión exitosa a la base de datos `igucosadb`",
-                        "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    lblEstadoConexion.Text = "Falló conexión";
-                    lblEstadoConexion.ForeColor = System.Drawing.Color.Red;
-                    MessageBox.Show(
-                        $"NO SE PUDO CONECTAR\n\n" +
-                        $"Error: {ex.Message}\n\n" +
-                        $"VERIFIQUE:\n" +
-                        $"• MySQL encendido (XAMPP)\n" +
-                        $"• Base de datos: igucosadb\n" +
-                        $"• Usuario: root\n" +
-                        $"• Contraseña: root",
-                        "Error de Conexión",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                }
-            }
-        }
-
         private void btnIngresar_Click(object sender, EventArgs e)
         {
             string usuario = txtUsuario.Text.Trim();
@@ -100,6 +72,54 @@ namespace proyectoFinalPrn115
                 {
                     MessageBox.Show("Error: " + ex.Message);
                 }
+            }
+        }
+
+        private void btnProbarConexion_Click(object sender, EventArgs e)
+        {
+            string mensaje;
+            if (Database.ProbarConexion(out mensaje))
+            {
+                lblEstadoConexion.Text = "Conectado";
+                lblEstadoConexion.ForeColor = System.Drawing.Color.Green;
+                MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                lblEstadoConexion.Text = "Desconectado";
+                lblEstadoConexion.ForeColor = System.Drawing.Color.Red;
+                MessageBox.Show(mensaje, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void FormLogin_Load(object sender, FormClosingEventArgs e)
+        {
+            var result = MessageBox.Show(
+         "¿Estás seguro de salir del sistema?",
+         "Confirmar salida",
+         MessageBoxButtons.YesNo,
+         MessageBoxIcon.Question
+     );
+
+            if (result == DialogResult.Yes)
+            {
+                // Cierra conexión
+                Database.CerrarConexionGlobal();
+
+                // Cierra todos los formularios abiertos
+                foreach (Form form in Application.OpenForms.Cast<Form>().ToList())
+                {
+                    if (form != this)
+                        form.Close();
+                }
+
+                // Fuerza salida
+                Application.Exit();
+                Environment.Exit(0);
+            }
+            else
+            {
+                e.Cancel = true; // Cancela el cierre
             }
         }
     }

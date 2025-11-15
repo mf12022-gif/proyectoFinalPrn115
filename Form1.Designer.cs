@@ -36,6 +36,7 @@ namespace proyectoFinalPrn115
             this.txtClave = new System.Windows.Forms.TextBox();
             this.btnIngresar = new System.Windows.Forms.Button();
             this.lblEstadoConexion = new System.Windows.Forms.Label();
+            this.btnProbarConexion = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -108,12 +109,23 @@ namespace proyectoFinalPrn115
             this.lblEstadoConexion.Size = new System.Drawing.Size(0, 13);
             this.lblEstadoConexion.TabIndex = 6;
             // 
+            // btnProbarConexion
+            // 
+            this.btnProbarConexion.Location = new System.Drawing.Point(220, 48);
+            this.btnProbarConexion.Name = "btnProbarConexion";
+            this.btnProbarConexion.Size = new System.Drawing.Size(100, 23);
+            this.btnProbarConexion.TabIndex = 7;
+            this.btnProbarConexion.Text = "Probar Conexion";
+            this.btnProbarConexion.UseVisualStyleBackColor = true;
+            this.btnProbarConexion.Click += new System.EventHandler(this.btnProbarConexion_Click);
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.ClientSize = new System.Drawing.Size(537, 218);
+            this.Controls.Add(this.btnProbarConexion);
             this.Controls.Add(this.lblEstadoConexion);
             this.Controls.Add(this.btnIngresar);
             this.Controls.Add(this.txtClave);
@@ -138,6 +150,7 @@ namespace proyectoFinalPrn115
         private System.Windows.Forms.TextBox txtClave;
         private System.Windows.Forms.Button btnIngresar;
         private System.Windows.Forms.Label lblEstadoConexion;
+        private System.Windows.Forms.Button btnProbarConexion;
     }
 }
 

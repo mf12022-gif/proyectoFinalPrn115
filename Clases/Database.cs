@@ -14,25 +14,79 @@ namespace proyectoFinalPrn115.Clases
     /// </summary>
     public class Database
     {
-        // DATOS DE CONEXIÓN A igucosadb
+        // DATOS DE CONEXIÓN
         private static string servidor = "localhost";
-        private static string bd = "igucosadb";   //BASE DE DATOS
+        private static string bd = "igucosadb";
         private static string usuario = "root";
         private static string password = "root";
 
-        
+        // CADENA DE CONEXIÓN
+        private static string cadenaConexion =
+            $"Server={servidor};Database={bd};Uid={usuario};Pwd={password};";
 
-        // MÉTODO: Devuelve conexión
+        // CONEXIÓN GLOBAL (opcional, para cerrar al final)
+        private static MySqlConnection conexionGlobal;
+
+        // MÉTODO: Devuelve una nueva conexión
         public static MySqlConnection GetConnection()
         {
-            // CADENA DE CONEXIÓN
-            string cadenaConexion =
-               $"Server={servidor};Database={bd};Uid={usuario};Pwd={password};";
             return new MySqlConnection(cadenaConexion);
         }
-        public static void CerrarConexion(MySqlConnection conexionBD)
+
+        // MÉTODO: Prueba la conexión (para el botón)
+        public static bool ProbarConexion(out string mensaje)
         {
-            conexionBD.Close();
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(cadenaConexion))
+                {
+                    conn.Open();
+                    mensaje = $"Conexión exitosa a `{bd}`";
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                mensaje = $"Error: {ex.Message}\n\n" +
+                          $"• Asegúrate de que XAMPP esté encendido\n" +
+                          $"• MySQL esté en puerto 3306\n" +
+                          $"• La base `{bd}` exista";
+                return false;
+            }
+        }
+
+        // MÉTODO: Abre conexión global (opcional)
+        public static bool AbrirConexionGlobal()
+        {
+            try
+            {
+                if (conexionGlobal == null || conexionGlobal.State != System.Data.ConnectionState.Open)
+                {
+                    conexionGlobal = new MySqlConnection(cadenaConexion);
+                    conexionGlobal.Open();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // MÉTODO: Cierra conexión global al salir
+        public static void CerrarConexionGlobal()
+        {
+            if (conexionGlobal != null)
+            {
+                try
+                {
+                    if (conexionGlobal.State == System.Data.ConnectionState.Open)
+                        conexionGlobal.Close();
+                    conexionGlobal.Dispose();
+                }
+                catch { }
+                conexionGlobal = null;
+            }
         }
     }
 }

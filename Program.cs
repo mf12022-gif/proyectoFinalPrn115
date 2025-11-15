@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using proyectoFinalPrn115.Clases;
 
 namespace proyectoFinalPrn115
 {
@@ -16,7 +17,19 @@ namespace proyectoFinalPrn115
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormLogin());
+
+            try
+            {
+                // Inicia el formulario principal
+                Application.Run(new FormLogin());
+            }
+            finally
+            {
+                // CIERRE TOTAL OBLIGATORIO
+                Database.CerrarConexionGlobal();
+                Application.Exit();           // Cierra todos los forms
+                Environment.Exit(0);          // MATA EL PROCESO
+            }
         }
     }
 }
