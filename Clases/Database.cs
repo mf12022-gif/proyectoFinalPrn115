@@ -16,7 +16,7 @@ namespace proyectoFinalPrn115.Clases
     {
         // DATOS DE CONEXIÓN A igucosadb
         private static string servidor = "localhost";
-        private static string bd = "igucosadb";   // NUEVA BASE DE DATOS
+        private static string bd = "igucosadb";   //BASE DE DATOS
         private static string usuario = "root";
         private static string password = "root";
 

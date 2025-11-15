@@ -104,12 +104,5 @@ namespace proyectoFinalPrn115
                 // El evento FormClosed del login se encargará de mostrarlo nuevamente
             }
         }
-        // EVENTO: Al cerrar el formulario principal (opcional: limpiar recursos)
-        private void frmPrincipal_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            // Muestra nuevamente el formulario de login al cerrar
-            FormLogin login = new FormLogin();
-            login.Show();
-        }
     }
 }

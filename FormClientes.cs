@@ -432,6 +432,7 @@ namespace proyectoFinalPrn115
             btnAbonar.Enabled = true;
             btnRetirar.Enabled = true;
             btnComprar.Enabled = true;
+            btnGuardar.Enabled = true;
         }
 
         private void HabilitarRegistro()
