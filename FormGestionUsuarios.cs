@@ -25,7 +25,7 @@ namespace proyectoFinalPrn115
         public FormGestionUsuarios()
 
         {
-            InitializeComponent();// Inicializa controles
+            InitializeComponent();
             // Configura DataGridView
             ConfigurarDataGridView();
 
@@ -193,9 +193,10 @@ namespace proyectoFinalPrn115
                 }
                 else
                 {
-                    MessageBox.Show("Empleado no encontrado. ¿Desea registrarlo?", "Nuevo",
+                   
+                   DialogResult resultado= MessageBox.Show("Empleado no encontrado. ¿Desea registrarlo?", "Nuevo",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (DialogResult.Yes == DialogResult.Yes)
+                    if (resultado == DialogResult.Yes)
                     {
                         duiSeleccionado = dui;
                         HabilitarCamposEdicion();
@@ -334,6 +335,9 @@ namespace proyectoFinalPrn115
         {
             DeshabilitarCamposEdicion();
             txtBuscarDUI.Clear();
+            txtNombreEmpleado.Clear();
+            cmbCargo.SelectedIndex = -1;
+            txtUsuario.Clear();
             txtBuscarDUI.Focus();
             duiSeleccionado = "";
         }
