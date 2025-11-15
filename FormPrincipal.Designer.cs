@@ -141,7 +141,7 @@ namespace proyectoFinalPrn115
             this.Controls.Add(this.lblBienvenida);
             this.Name = "FormPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormPrincipal";
+            this.Text = "Menu-Principal";
             this.ResumeLayout(false);
             this.PerformLayout();
 

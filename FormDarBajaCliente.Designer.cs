@@ -227,7 +227,7 @@ namespace proyectoFinalPrn115
             this.Controls.Add(this.label1);
             this.Name = "FormDarBajaCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormDarBaja";
+            this.Text = "Baja-Usuarios";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -265,7 +265,7 @@ namespace proyectoFinalPrn115
             this.Controls.Add(this.label1);
             this.Name = "FormClientes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormClientes";
+            this.Text = "Clientes";
             ((System.ComponentModel.ISupportInitialize)(this.nudMonto)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

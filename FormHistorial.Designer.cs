@@ -136,7 +136,7 @@ namespace proyectoFinalPrn115
             this.Controls.Add(this.label1);
             this.Name = "FormHistorial";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormHistorial";
+            this.Text = "Historial-Transacciones";
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorial)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

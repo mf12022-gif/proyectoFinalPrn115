@@ -91,7 +91,7 @@ namespace proyectoFinalPrn115
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(29, 283);
+            this.label2.Location = new System.Drawing.Point(12, 283);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 13);
             this.label2.TabIndex = 4;
@@ -235,7 +235,7 @@ namespace proyectoFinalPrn115
             this.Controls.Add(this.label1);
             this.Name = "FormGestionUsuarios";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormGestionUsuarios";
+            this.Text = "Gestion-Usuarios";
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmpleados)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
