@@ -8,6 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using proyectoFinalPrn115.Clases;
+/// <summary>
+/// Autor : Hugo Mejia 
+/// fecha : 16/11/2025
+/// version:1.0
+/// </summary>
+///programa que lleva registros de una cooperativa llamada igucosa y hace la conexion a una base de datos
+///</summary>
+///<param>
+///solicita que cada usuario se loguee dependiendo su cargo (gerente, asesor y cajero)
+///</param>
 
 namespace proyectoFinalPrn115
 {
