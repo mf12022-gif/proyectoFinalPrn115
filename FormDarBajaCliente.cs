@@ -22,345 +22,325 @@ using System.Windows.Forms;
 
 namespace proyectoFinalPrn115
 {
-    public partial class FormDarBajaCliente : Form
+    /// <summary>
+    /// Formulario para dar de baja (eliminar) a un cliente del sistema.
+    /// Solo accesible por gerentes.
+    /// Valida DUI en el botón BUSCAR: no vacío, solo números, exactamente 9 dígitos.
+    /// Usa ON DELETE CASCADE en la base de datos.
+    /// </summary>
+    public partial class FormDarBajaCliente: Form
     {
-        // =============================================
-        // VARIABLES PRIVADAS
-        // =============================================
-        private string duiCliente = "";  // DUI del cliente a dar de baja
-        private string nombreCliente = "";
+        private string duiCliente; // Almacena el DUI válido tras búsqueda
 
-        // =============================================
-        // CONSTRUCTOR
-        // =============================================
-        public FormDarBajaCliente()
+        /// <summary>
+        /// Constructor del formulario.
+        /// Recibe el cargo del usuario para validar permisos.
+        /// </summary>
+        /// <param name="cargo">Rol del usuario (cajero, asesor, gerente)</param>
+        public FormDarBajaCliente(string cargo)
         {
             InitializeComponent();
-            // Configura controles
-            ConfigurarControles();
-
-            // Deshabilita campos al inicio
-            DeshabilitarCampos();
+            ConfigurarPermisos(cargo);
+            txtDUI.Focus();
         }
-
-        // =============================================
-        // MÉTODO: Configura controles iniciales
-        // =============================================
-        private void ConfigurarControles()
+        /// <summary>
+        /// Valida que el usuario tenga permisos para dar de baja.
+        /// Solo asesor y gerente pueden acceder.
+        /// </summary>
+        /// <param name="cargo">Rol del usuario</param>
+        private void ConfigurarPermisos(string cargo)
         {
-            // Configura DateTimePicker
-            dtpFechaFallecimiento.Value = DateTime.Today;
-            dtpFechaFallecimiento.MaxDate = DateTime.Today;
-
-            // Configura ComboBox de parentesco
-            cmbParentesco.Items.AddRange(new string[] {
-                "Cónyuge",
-                "Hijo/a",
-                "Padre/Madre",
-                "Hermano/a",
-                "Otro"
-            });
-            cmbParentesco.SelectedIndex = 0;
-
-            // Título del formulario
-            this.Text = "DAR DE BAJA CLIENTE - FALLECIMIENTO";
+            if (cargo.ToLower() != "asesor" && cargo.ToLower() != "gerente")
+            {
+                MessageBox.Show(
+                    "Acceso denegado. Solo gerentes pueden dar de baja clientes.",
+                    "Permiso Requerido",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Stop
+                );
+                this.Close(); // Cierra el formulario si no tiene permiso
+            }
         }
+        // ========================================
+        // VALIDACIÓN DUI (9 DÍGITOS, SIN ESPACIOS)
+        // ========================================
+        private void txtDUI_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // PERMITIR SOLO NÚMEROS (0-9) Y TECLA BORRAR (Backspace)
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            {
+                e.Handled = true; // Bloquea cualquier otra tecla
+                return;
+            }
 
+            //  MÁXIMO 9 DÍGITOS (excepto borrar)
+            if (txtDUI.Text.Length >= 9 && e.KeyChar != (char)Keys.Back)
+            {
+                e.Handled = true;
+                MessageBox.Show(
+                    "El DUI debe tener exactamente 9 dígitos.\nUse ← (Backspace) para corregir.",
+                    "Límite de 9 dígitos",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+            }
+        }
+        /// <summary>
+        /// Evento del botón BUSCAR.
+        /// Valida DUI y busca al cliente en la base de datos.
+        /// </summary>
         private void btnBuscarCliente_Click(object sender, EventArgs e)
         {
-            string dui = txtDUI.Text.Trim().Replace("-", "");
+            string dui = txtDUI.Text.Trim();
 
-            // VALIDACIÓN DUI
-            if (string.IsNullOrWhiteSpace(dui))
+            // === VALIDACIÓN COMPLETA DEL DUI ===
+            if (string.IsNullOrEmpty(dui))
             {
-                MessageBox.Show("Ingrese un DUI para buscar.", "Campo vacío",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "El campo DUI no puede estar vacío.",
+                    "Campo Requerido",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
                 txtDUI.Focus();
                 return;
             }
 
-            if (dui.Length != 9 || !dui.All(char.IsDigit))
+            if (!long.TryParse(dui, out _))
             {
-                MessageBox.Show("DUI debe tener 9 dígitos numéricos.", "Formato inválido",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "El DUI solo puede contener números (0-9).",
+                    "Solo Números",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
                 txtDUI.Focus();
+                txtDUI.SelectAll();
                 return;
             }
 
-            MySqlConnection conn = Database.GetConnection();
-            MySqlCommand consulta = new MySqlCommand();
-
-            try
-            {
-                consulta.Connection = conn;
-                consulta.CommandText = @"
-                    SELECT 
-                        p.Nombre, 
-                        p.Apellido, 
-                        c.BilleteraVirtual,
-                        CONCAT(p.Nombre, ' ', p.Apellido) AS NombreCompleto
-                    FROM Clientes c
-                    JOIN Personas p ON c.DUI = p.DUI
-                    WHERE c.DUI = '{0}'";
-
-                consulta.CommandText = string.Format(consulta.CommandText, dui);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(consulta);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    DataRow row = dt.Rows[0];
-                    nombreCliente = row["NombreCompleto"].ToString();
-                    lblNombreCliente.Text = "Cliente: " + nombreCliente;
-                    lblSaldoActual.Text = "Saldo actual: $" + Convert.ToDecimal(row["BilleteraVirtual"]).ToString("F2");
-
-                    duiCliente = dui;
-                    HabilitarCampos();
-                    txtSolicitante.Focus();
-                }
-                else
-                {
-                    MessageBox.Show("Cliente no encontrado en el sistema.", "No existe",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimpiarTodo();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al buscar cliente: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
+            // === SI PASA TODAS LAS VALIDACIONES → BUSCAR ===
+            duiCliente = dui;
+            BuscarClienteEnBaseDatos(duiCliente);
         }
 
-        private void btnProcesarBaja_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Busca al cliente en la base de datos.
+        /// </summary>
+        /// <param name="dui">DUI validado</param>
+        private void BuscarClienteEnBaseDatos(string dui)
         {
-            if (!ValidarCamposBaja()) return;
-
-            // CONFIRMACIÓN FINAL
-            DialogResult confirmacion = MessageBox.Show(
-                $"¿CONFIRMAR DAR DE BAJA AL CLIENTE?\n\n" +
-                $"Cliente: {nombreCliente}\n" +
-                $"DUI: {duiCliente}\n" +
-                $"Fecha de fallecimiento: {dtpFechaFallecimiento.Value:dd/MM/yyyy}\n" +
-                $"Solicitante: {txtSolicitante.Text.Trim()} ({cmbParentesco.Text})\n\n" +
-                $"Esta acción es IRREVERSIBLE.",
-                "Confirmar Baja por Fallecimiento",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Exclamation
-            );
-
-            if (confirmacion != DialogResult.Yes) return;
-
-            MySqlConnection conn = Database.GetConnection();
-            MySqlCommand consulta = new MySqlCommand();
-
-            try
+            using (MySqlConnection conn = Database.GetConnection())
             {
-                conn.Open();
-
-                // 1. REGISTRAR TRANSACCIÓN DE RETIRO TOTAL (saldo a 0)
-                decimal saldo = ObtenerSaldoCliente(duiCliente);
-                if (saldo > 0)
-                {
-                    consulta.Connection = conn;
-                    consulta.CommandText = @"
-                        INSERT INTO Transacciones 
-                        (DUI_Cliente, Tipo, Monto, Descripcion, Fecha) 
-                        VALUES ('{0}', 'retiro', {1}, 'Retiro total por fallecimiento', '{2}')";
-
-                    consulta.CommandText = string.Format(consulta.CommandText,
-                        duiCliente,
-                        saldo.ToString().Replace(",", "."),
-                        DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-                    MySqlDataAdapter adapter1 = new MySqlDataAdapter(consulta);
-                    DataTable temp1 = new DataTable();
-                    adapter1.Fill(temp1);
-                }
-
-                // 2. ACTUALIZAR SALDO A 0
-                consulta.CommandText = $"UPDATE Clientes SET BilleteraVirtual = 0 WHERE DUI = '{duiCliente}'";
-                MySqlDataAdapter adapter2 = new MySqlDataAdapter(consulta);
-                DataTable temp2 = new DataTable();
-                adapter2.Fill(temp2);
-
-                // 3. REGISTRAR MOTIVO DE BAJA EN TABLA AUXILIAR (opcional)
-                // Si existe tabla BajasClientes, se inserta
                 try
                 {
-                    consulta.CommandText = @"
-                        INSERT INTO BajasClientes 
-                        (DUI_Cliente, FechaFallecimiento, Solicitante, Parentesco, FechaRegistro, ProcesadoPor)
-                        VALUES ('{0}', '{1}', '{2}', '{3}', NOW(), 'GERENTE')";
+                    conn.Open();
+                    string sql = @"
+                        SELECT p.Nombre, p.Apellido, c.BilleteraVirtual 
+                        FROM Personas p
+                        JOIN Clientes c ON p.DUI = c.DUI
+                        WHERE p.DUI = @dui";
 
-                    consulta.CommandText = string.Format(consulta.CommandText,
-                        duiCliente,
-                        dtpFechaFallecimiento.Value.ToString("yyyy-MM-dd"),
-                        txtSolicitante.Text.Trim(),
-                        cmbParentesco.Text);
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@dui", dui);
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Mostrar datos
+                                txtNombre.Text = $"Cliente: {reader["Nombre"]} {reader["Apellido"]}";
+                                lblSaldo.Text = $"Saldo actual: ${Convert.ToDecimal(reader["BilleteraVirtual"]):F2}";
+                                txtNombre.Visible = true;
+                                lblSaldo.Visible = true;
+                                btnProcesarBaja.Enabled = true;
 
-                    MySqlDataAdapter adapter3 = new MySqlDataAdapter(consulta);
-                    DataTable temp3 = new DataTable();
-                    adapter3.Fill(temp3);
+                                // Advertencia si tiene saldo
+                                if (Convert.ToDecimal(reader["BilleteraVirtual"]) > 0)
+                                {
+                                    lblAdvertencia.Text = "¡ADVERTENCIA! El cliente tiene saldo en su billetera.";
+                                    lblAdvertencia.ForeColor = System.Drawing.Color.Red;
+                                    lblAdvertencia.Visible = true;
+                                }
+                                else
+                                {
+                                    lblAdvertencia.Visible = false;
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show(
+                                    "Cliente no encontrado con ese DUI.",
+                                    "No Encontrado",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information
+                                );
+                                LimpiarDatos();
+                            }
+                        }
+                    }
                 }
-                catch { /* Si no existe la tabla, se ignora */ }
-
-                // 4. ELIMINAR CLIENTE (ON DELETE CASCADE en Personas)
-                consulta.CommandText = $"DELETE FROM Clientes WHERE DUI = '{duiCliente}'";
-                MySqlDataAdapter adapter4 = new MySqlDataAdapter(consulta);
-                DataTable temp4 = new DataTable();
-                adapter4.Fill(temp4);
-
-                MessageBox.Show(
-                    $"CLIENTE DADO DE BAJA EXITOSAMENTE\n\n" +
-                    $"Cliente: {nombreCliente}\n" +
-                    $"DUI: {duiCliente}\n" +
-                    $"Saldo retirado: ${saldo:F2}\n" +
-                    $"Registrado por: {txtSolicitante.Text.Trim()} ({cmbParentesco.Text})",
-                    "Baja Procesada",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
-                );
-
-                LimpiarTodo();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al procesar baja: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
-            }
-        }
-
-        // =============================================
-        // MÉTODO: Obtiene saldo actual del cliente
-        // =============================================
-        private decimal ObtenerSaldoCliente(string dui)
-        {
-            decimal saldo = 0;
-            MySqlConnection conn = Database.GetConnection();
-            MySqlCommand consulta = new MySqlCommand();
-
-            try
-            {
-                consulta.Connection = conn;
-                consulta.CommandText = $"SELECT BilleteraVirtual FROM Clientes WHERE DUI = '{dui}'";
-                MySqlDataAdapter adapter = new MySqlDataAdapter(consulta);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
+                catch (Exception ex)
                 {
-                    saldo = Convert.ToDecimal(dt.Rows[0][0]);
+                    MessageBox.Show(
+                        "Error al buscar cliente: " + ex.Message,
+                        "Error de Base de Datos",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
                 }
             }
-            catch { }
+        }
+        /// <summary>
+        /// Evento del botón DAR DE BAJA.
+        /// Elimina el cliente (usa ON DELETE CASCADE).
+        /// </summary>
+        private void btnProcesarBaja_Click(object sender, EventArgs e)
+        {
+            //  VALIDAR TODOS LOS CAMPOS DE ENTRADA 
+            // ❌ Antes: if (!ValidarCampo(txtSolicitante, "Nombre del solicitante")) return;
+            // ✅ Ahora:
+            if (!ValidarNombreCompleto(txtSolicitante, "Nombre y Apellido del Solicitante")) return;
 
-            return saldo;
+            if (!ValidarComboBox(cmbParentesco, "Parentesco")) return;
+            if (!ValidarFechaFallecimiento()) return;
+            bool ValidarNombreCompleto(TextBox txt, string nombreCampo)
+            {
+                string texto = txt.Text.Trim();
+
+                // 1. Validar que no esté vacío (reusa la lógica de ValidarCampo)
+                if (string.IsNullOrWhiteSpace(texto))
+                {
+                    MostrarAdvertencia($"El campo '{nombreCampo}' es obligatorio.");
+                    txt.Focus();
+                    return false;
+                }
+
+                // 2. Validar que contenga al menos dos palabras (Nombre y Apellido)
+                // Divide el texto por espacios y verifica que haya 2 o más partes.
+                string[] partes = texto.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (partes.Length < 2)
+                {
+                    MostrarAdvertencia($"El campo '{nombreCampo}' debe contener al menos el **Nombre** y el **Apellido** del solicitante.");
+                    txt.Focus();
+                    txt.SelectAll();
+                    return false;
+                }
+
+                return true;
+            }
+
+            //SI TODO ESTÁ LLENO → CONFIRMAR 
+            ConfirmarYProcesarBaja();
         }
 
-        // =============================================
-        // VALIDACIÓN DE CAMPOS
-        // =============================================
-        private bool ValidarCamposBaja()
+        private bool ValidarCampo(TextBox txt, string nombre)
         {
-            if (string.IsNullOrWhiteSpace(duiCliente))
+            if (string.IsNullOrWhiteSpace(txt.Text))
             {
-                MessageBox.Show("Busque un cliente primero.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MostrarAdvertencia($"El campo '{nombre}' es obligatorio.");
+                txt.Focus();
                 return false;
             }
-
-            if (string.IsNullOrWhiteSpace(txtSolicitante.Text))
-            {
-                MessageBox.Show("Nombre del solicitante obligatorio.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtSolicitante.Focus();
-                return false;
-            }
-
-            if (!txtSolicitante.Text.Trim().Contains(" "))
-            {
-                MessageBox.Show("Ingrese nombre y apellido del solicitante.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtSolicitante.Focus();
-                return false;
-            }
-
-            if (dtpFechaFallecimiento.Value > DateTime.Today)
-            {
-                MessageBox.Show("Fecha de fallecimiento no puede ser futura.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
             return true;
         }
 
+        private bool ValidarComboBox(ComboBox cmb, string nombre)
+        {
+            if (cmb.SelectedIndex == -1)
+            {
+                MostrarAdvertencia($"Debe seleccionar un '{nombre}'.");
+                cmb.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidarFechaFallecimiento()
+        {
+            if (dtpFechaFallecimiento.Value > DateTime.Today)
+            {
+                MostrarAdvertencia("La fecha de fallecimiento no puede ser futura.");
+                dtpFechaFallecimiento.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        private void MostrarAdvertencia(string mensaje)
+        {
+            MessageBox.Show(mensaje, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void ConfirmarYProcesarBaja()
+        {
+            string resumen = $"DUI: {duiCliente}\n" +
+                            $"Cliente: {txtNombre.Text}\n" +
+                            $"Solicitante: {txtSolicitante.Text}\n" +
+                            $"Parentesco: {cmbParentesco.SelectedItem}\n" +
+                            $"Fecha fallecimiento: {dtpFechaFallecimiento.Value:dd/MM/yyyy}";
+
+            var confirm = MessageBox.Show(
+                $"¿Confirmar baja por fallecimiento?\n\n{resumen}",
+                "Confirmar Baja",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (confirm == DialogResult.Yes)
+            {
+                EjecutarBajaEnBaseDatos();
+            }
+        }
+
+        private void EjecutarBajaEnBaseDatos()
+        {
+            using (MySqlConnection conn = Database.GetConnection())
+            {
+                conn.Open();
+                using (MySqlTransaction trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        string sql = "DELETE FROM Personas WHERE DUI = @dui";
+                        using (MySqlCommand cmd = new MySqlCommand(sql, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@dui", duiCliente);
+                            cmd.ExecuteNonQuery();
+                        }
+                        trans.Commit();
+                        MessageBox.Show("Baja procesada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+        // <summary>
+        /// Evento del botón CANCELAR.
+        /// Cierra el formulario sin hacer cambios.
+        /// </summary>
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Cancelar operación de baja?", "Confirmar",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                LimpiarTodo();
-            }
+            this.Close();
         }
-
-        // =============================================
-        // MÉTODOS DE LIMPIEZA Y HABILITACIÓN
-        // =============================================
-        private void LimpiarTodo()
+        /// <summary>
+        /// Limpia los datos mostrados del cliente.
+        /// </summary>
+        private void LimpiarDatos()
         {
-            txtDUI.Clear();
-            lblNombreCliente.Text = "-";
-            lblSaldoActual.Text = "$0.00";
-            duiCliente = "";
-            txtSolicitante.Clear();
-            cmbParentesco.SelectedIndex = -1;
-            DeshabilitarCampos();
+            txtNombre.Visible = false;
+            lblSaldo.Visible = false;
+            lblAdvertencia.Visible = false;
+            btnProcesarBaja.Enabled = false;
+            duiCliente = null;
             txtDUI.Focus();
         }
-
-        private void HabilitarCampos()
-        {
-            txtSolicitante.Enabled = true;
-            cmbParentesco.Enabled = true;
-            dtpFechaFallecimiento.Enabled = true;
-            btnProcesarBaja.Enabled = true;
-            btnCancelar.Enabled = true;
-        }
-
-        private void DeshabilitarCampos()
-        {
-            txtSolicitante.Enabled = false;
-            cmbParentesco.Enabled = false;
-            dtpFechaFallecimiento.Enabled = false;
-            btnProcesarBaja.Enabled = false;
-            btnCancelar.Enabled = false;
-        }
-
-        private void txtDUI_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // Permite: Backspace, Delete, teclas de navegación
-            if (e.KeyChar == (char)Keys.Back ||
-                e.KeyChar == (char)Keys.Delete ||
-                char.IsControl(e.KeyChar))
-            {
-                e.Handled = false; // ← Permite borrar
-                return;
-            }
-
-            // Bloquea cualquier dígito si ya hay 9
-            if (char.IsDigit(e.KeyChar) && txtDUI.Text.Length >= 9)
-            {
-                e.Handled = true; // ← No permite escribir más números
-            }
-        }
+        
     }
 }

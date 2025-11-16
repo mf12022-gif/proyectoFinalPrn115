@@ -31,10 +31,10 @@ namespace proyectoFinalPrn115
         {
             this.label1 = new System.Windows.Forms.Label();
             this.txtDUI = new System.Windows.Forms.TextBox();
-            this.btnBuscarCliente = new System.Windows.Forms.Button();
+            this.btnBuscarDui = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.lblNombreCliente = new System.Windows.Forms.TextBox();
+            this.txtNombre = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.cmbParentesco = new System.Windows.Forms.ComboBox();
@@ -43,8 +43,10 @@ namespace proyectoFinalPrn115
             this.dtpFechaFallecimiento = new System.Windows.Forms.DateTimePicker();
             this.btnProcesarBaja = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
-            this.lblSaldoActual = new System.Windows.Forms.Label();
+            this.lblSaldo = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.lblTitulo = new System.Windows.Forms.Label();
+            this.lblAdvertencia = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -66,16 +68,16 @@ namespace proyectoFinalPrn115
             this.txtDUI.TabIndex = 1;
             this.txtDUI.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDUI_KeyPress);
             // 
-            // btnBuscarCliente
+            // btnBuscarDui
             // 
-            this.btnBuscarCliente.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscarCliente.Location = new System.Drawing.Point(283, 78);
-            this.btnBuscarCliente.Name = "btnBuscarCliente";
-            this.btnBuscarCliente.Size = new System.Drawing.Size(80, 23);
-            this.btnBuscarCliente.TabIndex = 2;
-            this.btnBuscarCliente.Text = "BUSCAR CLIENTE";
-            this.btnBuscarCliente.UseVisualStyleBackColor = true;
-            this.btnBuscarCliente.Click += new System.EventHandler(this.btnBuscarCliente_Click);
+            this.btnBuscarDui.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscarDui.Location = new System.Drawing.Point(283, 78);
+            this.btnBuscarDui.Name = "btnBuscarDui";
+            this.btnBuscarDui.Size = new System.Drawing.Size(80, 23);
+            this.btnBuscarDui.TabIndex = 2;
+            this.btnBuscarDui.Text = "BUSCAR CLIENTE";
+            this.btnBuscarDui.UseVisualStyleBackColor = true;
+            this.btnBuscarDui.Click += new System.EventHandler(this.btnBuscarCliente_Click);
             // 
             // label2
             // 
@@ -83,9 +85,9 @@ namespace proyectoFinalPrn115
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(44, 127);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 13);
+            this.label2.Size = new System.Drawing.Size(68, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "CLIENTE :";
+            this.label2.Text = "NOMBRE :";
             // 
             // label3
             // 
@@ -97,20 +99,20 @@ namespace proyectoFinalPrn115
             this.label3.TabIndex = 4;
             this.label3.Text = "SALDO ACTUAL :";
             // 
-            // lblNombreCliente
+            // txtNombre
             // 
-            this.lblNombreCliente.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombreCliente.Location = new System.Drawing.Point(118, 119);
-            this.lblNombreCliente.Name = "lblNombreCliente";
-            this.lblNombreCliente.ReadOnly = true;
-            this.lblNombreCliente.Size = new System.Drawing.Size(158, 20);
-            this.lblNombreCliente.TabIndex = 5;
+            this.txtNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNombre.Location = new System.Drawing.Point(118, 119);
+            this.txtNombre.Name = "txtNombre";
+            this.txtNombre.ReadOnly = true;
+            this.txtNombre.Size = new System.Drawing.Size(158, 20);
+            this.txtNombre.TabIndex = 5;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(23, 187);
+            this.label4.Location = new System.Drawing.Point(16, 200);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(96, 13);
             this.label4.TabIndex = 6;
@@ -120,7 +122,7 @@ namespace proyectoFinalPrn115
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(20, 215);
+            this.label5.Location = new System.Drawing.Point(14, 230);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 7;
@@ -128,9 +130,17 @@ namespace proyectoFinalPrn115
             // 
             // cmbParentesco
             // 
+            this.cmbParentesco.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbParentesco.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbParentesco.FormattingEnabled = true;
-            this.cmbParentesco.Location = new System.Drawing.Point(118, 207);
+            this.cmbParentesco.Items.AddRange(new object[] {
+            "Padre",
+            "Madre",
+            "Esposo(a)",
+            "Hijo(a)",
+            "Hermano(a)",
+            "Otro"});
+            this.cmbParentesco.Location = new System.Drawing.Point(118, 227);
             this.cmbParentesco.Name = "cmbParentesco";
             this.cmbParentesco.Size = new System.Drawing.Size(158, 21);
             this.cmbParentesco.TabIndex = 8;
@@ -138,7 +148,7 @@ namespace proyectoFinalPrn115
             // txtSolicitante
             // 
             this.txtSolicitante.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSolicitante.Location = new System.Drawing.Point(118, 179);
+            this.txtSolicitante.Location = new System.Drawing.Point(118, 197);
             this.txtSolicitante.Name = "txtSolicitante";
             this.txtSolicitante.Size = new System.Drawing.Size(158, 20);
             this.txtSolicitante.TabIndex = 10;
@@ -147,7 +157,7 @@ namespace proyectoFinalPrn115
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(12, 241);
+            this.label6.Location = new System.Drawing.Point(12, 265);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(123, 13);
             this.label6.TabIndex = 11;
@@ -156,7 +166,7 @@ namespace proyectoFinalPrn115
             // dtpFechaFallecimiento
             // 
             this.dtpFechaFallecimiento.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpFechaFallecimiento.Location = new System.Drawing.Point(141, 235);
+            this.dtpFechaFallecimiento.Location = new System.Drawing.Point(141, 259);
             this.dtpFechaFallecimiento.Name = "dtpFechaFallecimiento";
             this.dtpFechaFallecimiento.Size = new System.Drawing.Size(237, 20);
             this.dtpFechaFallecimiento.TabIndex = 12;
@@ -183,15 +193,15 @@ namespace proyectoFinalPrn115
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
-            // lblSaldoActual
+            // lblSaldo
             // 
-            this.lblSaldoActual.AutoSize = true;
-            this.lblSaldoActual.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSaldoActual.Location = new System.Drawing.Point(115, 156);
-            this.lblSaldoActual.Name = "lblSaldoActual";
-            this.lblSaldoActual.Size = new System.Drawing.Size(91, 13);
-            this.lblSaldoActual.TabIndex = 15;
-            this.lblSaldoActual.Text = "---------------------";
+            this.lblSaldo.AutoSize = true;
+            this.lblSaldo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSaldo.Location = new System.Drawing.Point(115, 156);
+            this.lblSaldo.Name = "lblSaldo";
+            this.lblSaldo.Size = new System.Drawing.Size(91, 13);
+            this.lblSaldo.TabIndex = 15;
+            this.lblSaldo.Text = "---------------------";
             // 
             // label7
             // 
@@ -203,14 +213,35 @@ namespace proyectoFinalPrn115
             this.label7.TabIndex = 16;
             this.label7.Text = "COOPERATIVA IGUCOSA";
             // 
+            // lblTitulo
+            // 
+            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.Location = new System.Drawing.Point(126, 46);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(173, 20);
+            this.lblTitulo.TabIndex = 17;
+            this.lblTitulo.Text = "ELIMINAR CLIENTE";
+            // 
+            // lblAdvertencia
+            // 
+            this.lblAdvertencia.AutoSize = true;
+            this.lblAdvertencia.Location = new System.Drawing.Point(138, 169);
+            this.lblAdvertencia.Name = "lblAdvertencia";
+            this.lblAdvertencia.Size = new System.Drawing.Size(28, 13);
+            this.lblAdvertencia.TabIndex = 18;
+            this.lblAdvertencia.Text = "-------";
+            // 
             // FormDarBajaCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.ClientSize = new System.Drawing.Size(390, 354);
+            this.ClientSize = new System.Drawing.Size(431, 354);
+            this.Controls.Add(this.lblAdvertencia);
+            this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.lblSaldoActual);
+            this.Controls.Add(this.lblSaldo);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnProcesarBaja);
             this.Controls.Add(this.dtpFechaFallecimiento);
@@ -219,10 +250,10 @@ namespace proyectoFinalPrn115
             this.Controls.Add(this.cmbParentesco);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.lblNombreCliente);
+            this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.btnBuscarCliente);
+            this.Controls.Add(this.btnBuscarDui);
             this.Controls.Add(this.txtDUI);
             this.Controls.Add(this.label1);
             this.Name = "FormDarBajaCliente";
@@ -237,10 +268,10 @@ namespace proyectoFinalPrn115
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtDUI;
-        private System.Windows.Forms.Button btnBuscarCliente;
+        private System.Windows.Forms.Button btnBuscarDui;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox lblNombreCliente;
+        private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cmbParentesco;
@@ -249,7 +280,9 @@ namespace proyectoFinalPrn115
         private System.Windows.Forms.DateTimePicker dtpFechaFallecimiento;
         private System.Windows.Forms.Button btnProcesarBaja;
         private System.Windows.Forms.Button btnCancelar;
-        private System.Windows.Forms.Label lblSaldoActual;
+        private System.Windows.Forms.Label lblSaldo;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblTitulo;
+        private System.Windows.Forms.Label lblAdvertencia;
     }
 }

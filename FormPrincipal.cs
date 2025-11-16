@@ -112,9 +112,14 @@ namespace proyectoFinalPrn115
         /// </summary>
         private void btnDarBaja_Click(object sender, EventArgs e)
         {
-            // Solo accesible para gerente
-            FormDarBajaCliente formBaja = new FormDarBajaCliente();
-            formBaja.ShowDialog(); // Ventana modal
+            // Valida que el cargo permita acceso (opcional, ya lo hace el form)
+            if (cargo != "asesor" && cargo != "gerente")
+            {
+                MessageBox.Show("Acceso denegado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+            new FormDarBajaCliente(cargo).Show(); // ← ABRE EL FORMULARIO
         }
         /// <summary>
         /// Cierra sesión y regresa al formulario de login.
@@ -156,6 +161,7 @@ namespace proyectoFinalPrn115
                     e.Cancel = true; // Cancela el cierre
                 }
             }
+
         }    
     }
 }
