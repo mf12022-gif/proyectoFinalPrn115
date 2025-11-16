@@ -12,6 +12,10 @@ using proyectoFinalPrn115.Clases;
 
 namespace proyectoFinalPrn115
 {
+    /// <summary>
+    /// Clase que maneja el inicio de sesion de los usuario gerente asesor y cajero a la base de datos
+    /// y dependiendo su cargo asi tendran acceso a los diferentes campos del programa
+    /// </summary>
     public partial class FormLogin : Form
     {
         public FormLogin()

@@ -11,6 +11,10 @@ using proyectoFinalPrn115.Clases;
 
 namespace proyectoFinalPrn115
 {
+    /// <summary>
+    /// Clase que maneja los diferentes campos a la base de datos del sistema
+    /// segun sea su cargo
+    /// </summary>
     public partial class FormPrincipal : Form
     {
         // VARIABLES PRIVADAS PARA ALMACENAR DATOS DEL USUARIO

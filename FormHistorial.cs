@@ -12,6 +12,9 @@ using System.Windows.Forms;
 
 namespace proyectoFinalPrn115
 {
+    /// <summary>
+    /// Clase que maneja la el historial de todas las transacciones de los usuarios de la base de datos
+    /// </summary>
     public partial class FormHistorial : Form
     {
         public FormHistorial()

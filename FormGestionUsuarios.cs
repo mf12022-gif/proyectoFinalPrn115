@@ -12,6 +12,10 @@ using System.Windows.Forms;
 
 namespace proyectoFinalPrn115
 {
+    /// <summary>
+    /// Clase que maneja abonos retiros y compras de los usuarios de la base de datos
+    /// y los registra en la clase historial
+    /// </summary>
     public partial class FormGestionUsuarios : Form
     {
         // =============================================
