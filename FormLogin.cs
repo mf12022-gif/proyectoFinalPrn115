@@ -104,43 +104,47 @@ namespace proyectoFinalPrn115
 
         private void FormLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Solo mostrar si el usuario hace clic en la X
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (e.CloseReason != CloseReason.UserClosing)
             {
-                var result = MessageBox.Show(
-                    "¿Estás seguro de salir del sistema?",
-                    "Confirmar salida",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2
-                );
+                e.Cancel = false;
+                return;
+            }
 
-                if (result == DialogResult.Yes)
+            // Desvincular temporalmente para evitar múltiples mensajes
+            foreach (Form form in Application.OpenForms.Cast<Form>().ToList())
+            {
+                if (form != this)
                 {
-                    // === SALIR: CIERRE TOTAL ===
-                    Database.CerrarConexionGlobal();
-
-                    // Cierra otros formularios sin disparar eventos
-                    foreach (Form form in Application.OpenForms.Cast<Form>().ToList())
-                    {
-                        if (form != this)
-                        {
-                            form.FormClosing -= FormLogin_FormClosing;
-                            form.Close();
-                        }
-                    }
-
-                    Application.Exit();     // Cierra la app
-                    Environment.Exit(0);    // CIERRRA EL PROCESO
+                    form.FormClosing -= FormLogin_FormClosing;
                 }
-                else
-                {
-                    e.Cancel = true; // NO salir
-                }
+            }
+
+            var result = MessageBox.Show(
+                "¿Estás seguro de salir del sistema?",
+                "Confirmar salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Database.CerrarConexionGlobal();
+                Application.Exit();
+                Environment.Exit(0);
             }
             else
             {
-                e.Cancel = false; // Cierre forzado (Application.Exit)
+                e.Cancel = true;
+
+                // Volver a vincular el evento
+                foreach (Form form in Application.OpenForms.Cast<Form>().ToList())
+                {
+                    if (form != this)
+                    {
+                        form.FormClosing += FormLogin_FormClosing;
+                    }
+                }
             }
         }
     }

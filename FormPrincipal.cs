@@ -22,8 +22,9 @@ using proyectoFinalPrn115.Clases;
 namespace proyectoFinalPrn115
 {
     /// <summary>
-    /// Clase que maneja los diferentes campos a la base de datos del sistema
-    /// segun sea su cargo
+    /// Formulario principal del sistema IGUCOSA.
+    /// Recibe el cargo y el nombre de usuario desde FormLogin.
+    /// Muestra menú dinámico según el rol del usuario.
     /// </summary>
     public partial class FormPrincipal : Form
     {
@@ -31,7 +32,12 @@ namespace proyectoFinalPrn115
         private string cargo;    // Almacena el cargo del usuario (cajero, asesor, gerente)
         private string usuario;  // Almacena el nombre de usuario logueado
 
-        // CONSTRUCTOR: Recibe el cargo y usuario desde el login
+        // <summary>
+        /// Constructor del formulario principal.
+        /// Recibe el cargo y el nombre de usuario desde FormLogin.
+        /// </summary>
+        /// <param name="cargo">Rol del usuario (cajero, asesor, gerente)</param>
+        /// <param name="nombreUsuario">Nombre de usuario</param>
         public FormPrincipal(string c, string u)
         {
             InitializeComponent();// Inicializa todos los controles del formulario (botones, labels, etc.)
@@ -61,7 +67,6 @@ namespace proyectoFinalPrn115
             // Si es ASESOR: puede registrar/modificar clientes, pero no usuarios
             else if (cargo == "asesor")
             {
-                btnGestionUsuarios.Enabled = false; // No puede gestionar usuarios
                 btnDarBaja.Enabled = false;// No puede gestionar dar de baja
                 btnGestionUsuarios.BackColor = System.Drawing.Color.LightGray;
             }
@@ -73,7 +78,9 @@ namespace proyectoFinalPrn115
                 btnDarBaja.Enabled = true;
             }
         }
-        // EVENTO: Botón CLIENTES - Abre el formulario de gestión de clientes
+        /// <summary>
+        /// Abre el formulario de gestión de clientes
+        /// </summary>
         private void btnClientes_Click(object sender, EventArgs e)
         {
             // Crea una nueva instancia del formulario de clientes
@@ -82,42 +89,74 @@ namespace proyectoFinalPrn115
             formClientes.ShowDialog(); // Muestra como ventana modal (bloquea el principal hasta cerrar)
 
         }
-
+        /// <summary>
+        /// Abre el formulario de historial.
+        /// </summary>
         private void btnHistorial_Click(object sender, EventArgs e)
         {
             // Abre el formulario de historial de transacciones
             FormHistorial formHistorial = new FormHistorial();
             formHistorial.ShowDialog(); // Ventana modal
         }
-
+        /// <summary>
+        /// Abre el formulario de gestión de usuarios (solo asesor y gerente).
+        /// </summary>
         private void btnGestionUsuarios_Click(object sender, EventArgs e)
         {
             // Solo accesible para gerente y asesor (cajero ya está deshabilitado)
             FormGestionUsuarios formUsuarios = new FormGestionUsuarios();
             formUsuarios.ShowDialog(); // Ventana modal
         }
-
+        /// <summary>
+        /// Abre el formulario Dar de Baja (solo gerente).
+        /// </summary>
         private void btnDarBaja_Click(object sender, EventArgs e)
         {
             // Solo accesible para gerente
             FormDarBajaCliente formBaja = new FormDarBajaCliente();
             formBaja.ShowDialog(); // Ventana modal
         }
-
+        /// <summary>
+        /// Cierra sesión y regresa al formulario de login.
+        /// </summary>
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show(
-         "¿Estás seguro de cerrar sesión y salir del sistema?",
-         "Confirmar salida",
-         MessageBoxButtons.YesNo,
-         MessageBoxIcon.Question
-     );
-
-            if (result == DialogResult.Yes)
+            if (MessageBox.Show("¿Cerrar sesión y volver al inicio?",
+        "Cerrar Sesión", MessageBoxButtons.YesNo,
+        MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Database.CerrarConexionGlobal();
-                Application.Exit();
+                Database.CerrarConexionGlobal(); // Cierra conexión
+                this.Hide();                     // Oculta el menú principal
+                new FormLogin().Show();          // Muestra el login
             }
         }
+        // ================================
+        // X DEL FORMULARIO → CIERRE TOTAL
+        // ================================
+        private void FormPrincipal_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                var result = MessageBox.Show(
+                    "¿Estás seguro de salir del sistema?\n\nLa aplicación se cerrará por completo.",
+                    "Confirmar salida",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                    Database.CerrarConexionGlobal();
+                    Application.Exit();
+                    Environment.Exit(0); // CIERRE TOTAL DEL PROCESO
+                }
+                else
+                {
+                    e.Cancel = true; // Cancela el cierre
+                }
+            }
+        }    
     }
 }
+

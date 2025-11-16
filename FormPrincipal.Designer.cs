@@ -142,6 +142,7 @@ namespace proyectoFinalPrn115
             this.Name = "FormPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Menu-Principal";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPrincipal_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
