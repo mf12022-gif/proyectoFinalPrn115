@@ -48,6 +48,7 @@ namespace proyectoFinalPrn115
             else if (cargo == "asesor")
             {
                 btnGestionUsuarios.Enabled = false; // No puede gestionar usuarios
+                btnDarBaja.Enabled = false;// No puede gestionar dar de baja
                 btnGestionUsuarios.BackColor = System.Drawing.Color.LightGray;
             }
             // Si es GERENTE: tiene acceso total a todo el sistema

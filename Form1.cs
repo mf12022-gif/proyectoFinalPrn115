@@ -33,7 +33,8 @@ namespace proyectoFinalPrn115
 
             if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(clave))
             {
-                MessageBox.Show("Complete usuario y contraseña.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Complete usuario y contraseña.", "Error", MessageBoxButtons.OK, 
+                    MessageBoxIcon.Warning);
                 return;
             }
 
