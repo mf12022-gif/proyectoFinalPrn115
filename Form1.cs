@@ -21,12 +21,7 @@ namespace proyectoFinalPrn115
 
             // Configuracion botón de probar conexion
             btnProbarConexion.Text = "Probar Conexión";
-            btnProbarConexion.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
-            btnProbarConexion.ForeColor = System.Drawing.Color.White;
-            btnProbarConexion.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            btnProbarConexion.FlatStyle = FlatStyle.Flat;
-            btnProbarConexion.FlatAppearance.BorderSize = 0;
-
+           
             // Etiqueta de estado
             lblEstadoConexion.Text = "Sin probar";
             lblEstadoConexion.ForeColor = System.Drawing.Color.Gray;

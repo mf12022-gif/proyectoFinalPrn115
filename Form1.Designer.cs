@@ -111,12 +111,15 @@ namespace proyectoFinalPrn115
             // 
             // btnProbarConexion
             // 
+            this.btnProbarConexion.BackColor = System.Drawing.Color.DodgerBlue;
+            this.btnProbarConexion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnProbarConexion.ForeColor = System.Drawing.Color.Black;
             this.btnProbarConexion.Location = new System.Drawing.Point(220, 48);
             this.btnProbarConexion.Name = "btnProbarConexion";
             this.btnProbarConexion.Size = new System.Drawing.Size(100, 23);
             this.btnProbarConexion.TabIndex = 7;
             this.btnProbarConexion.Text = "Probar Conexion";
-            this.btnProbarConexion.UseVisualStyleBackColor = true;
+            this.btnProbarConexion.UseVisualStyleBackColor = false;
             this.btnProbarConexion.Click += new System.EventHandler(this.btnProbarConexion_Click);
             // 
             // FormLogin
