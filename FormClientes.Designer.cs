@@ -149,6 +149,11 @@ namespace proyectoFinalPrn115
             // 
             this.nudMonto.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nudMonto.Location = new System.Drawing.Point(108, 256);
+            this.nudMonto.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
             this.nudMonto.Name = "nudMonto";
             this.nudMonto.Size = new System.Drawing.Size(120, 20);
             this.nudMonto.TabIndex = 10;

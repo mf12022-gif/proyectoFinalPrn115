@@ -61,14 +61,12 @@ namespace proyectoFinalPrn115
             {
                 btnGestionUsuarios.Enabled = false; // No puede gestionar usuarios
                 btnDarBaja.Enabled = false;         // No puede dar de baja clientes
-                btnGestionUsuarios.BackColor = System.Drawing.Color.LightGray; // Visualmente deshabilitado
-                btnDarBaja.BackColor = System.Drawing.Color.LightGray;
+               
             }
             // Si es ASESOR: puede registrar/modificar clientes, pero no usuarios
             else if (cargo == "asesor")
             {
                 btnDarBaja.Enabled = false;// No puede gestionar dar de baja
-                btnGestionUsuarios.BackColor = System.Drawing.Color.LightGray;
             }
             // Si es GERENTE: tiene acceso total a todo el sistema
             else if (cargo == "gerente")
@@ -135,9 +133,7 @@ namespace proyectoFinalPrn115
                 new FormLogin().Show();          // Muestra el login
             }
         }
-        // ================================
         // X DEL FORMULARIO → CIERRE TOTAL
-        // ================================
         private void FormPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
